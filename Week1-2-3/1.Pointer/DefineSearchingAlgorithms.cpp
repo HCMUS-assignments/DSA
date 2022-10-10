@@ -57,6 +57,7 @@ int RecursiveBinarySearch(int* a, int left, int right, int key) {
     }
 }
 
+/*
 int main () {
     // test cases
 
@@ -71,3 +72,4 @@ int main () {
 
     return 225;
 }
+*/
