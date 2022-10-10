@@ -47,7 +47,46 @@ int *findMax(int *arr, int n) {
 
 // 6. find the longest ascending subarray from a given array
 int *findLongestAscendingSubarray(int *a, int n, int &length) {
+    // use dynamic programming
 
+    // init the array to store the length of the longest ascending subarray
+    vector <int> temp(n, 1);
+
+    // init the vector to store value of elements in subarray
+    vector <vector <int>> longest;
+    for (int i = 0; i < n; i++) {
+        vector <int> temp2;
+        temp2.push_back(a[i]);
+        longest.push_back(temp2);
+    }
+
+    // go through the array to check and update the length of the longest ascending subarray
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < i; j++) {
+            if (a[i] > a[j] && temp[i] <= temp[j] ) {
+                temp[i] = temp[j] + 1;
+                longest[i] = longest[j];
+                longest[i].push_back(a[i]);
+            }
+        }
+    }
+
+    // find the longest ascending subarray
+    int max = 1;
+    for (int i = 0; i < n; i++) {
+        if (temp[i] > max) {
+            max = temp[i];
+            length = max;
+        }
+    }
+
+    // return the longest ascending subarray
+    for (int i = 0; i < n; i++) {
+        if (temp[i] == max) {
+            return longest[i].data();
+        }
+    }
+    
 }
 
 // 7. swap 2 given arrays
@@ -181,29 +220,37 @@ int** findSubmatrix(int** a, int length, int width, int &lres, int &wres) {
 
 
 int main() {
-    int *a = new int[5];
-    int *b = new int[5];
-    for (int i = 0; i < 5; i++) {
-        a[i] = i + 2;
-        b[i] = i + 1;
-    }
-    printArray(a, 5);
-    printArray(b, 5);
+    // int *a = new int[5];
+    // int *b = new int[5];
+    // for (int i = 0; i < 5; i++) {
+    //     a[i] = i + 2;
+    //     b[i] = i + 1;
+    // }
+    // printArray(a, 5);
+    // printArray(b, 5);
 
-    int na = 5;
-    int nb = 5;
+    // int na = 5;
+    // int nb = 5;
 
-    int cc = 0, cr = 0;
-    int **c = generateMatrix2(a, b, na, nb, cr, cc);
-    for (int i = 0; i < cr; i++) {
-        for (int j = 0; j < cc; j++) {
-            cout << c[i][j] << " ";
-        }
-        cout << endl;
-    }
+    // int cc = 0, cr = 0;
+    // int **c = generateMatrix2(a, b, na, nb, cr, cc);
+    // for (int i = 0; i < cr; i++) {
+    //     for (int j = 0; j < cc; j++) {
+    //         cout << c[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
 
-    delete[] a;
-    delete[] b;
+    // delete[] a;
+    // delete[] b;
+
+
+    int a[] = {1, 7, 3, 2 ,3, 4, 9, 12, 13, 5, 6, 8, 10};
+    int length = 0;
+    int *longest = findLongestAscendingSubarray(a, sizeof(a)/sizeof(int), length );
+
+    printArray(longest, length);
+    
 
     return 225;
 }
