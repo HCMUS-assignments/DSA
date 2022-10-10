@@ -1,5 +1,4 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include "LibArrayFunctions.h"
 
 // 1. swap 2 given integers
 void swap(int *a, int *b) {
@@ -141,8 +140,24 @@ int *merge2Arrays(int *a, int *b, int na, int nb, int &nc) {
 
 // 10. generate a random matrix with keyboard input size
 void generateMatrix1(int **&a, int &length, int &width) {
+    // input the size of the matrix 
+    cout << "Enter the length of the matrix: ";
+    cin >> length;
+    cout << "Enter the width of the matrix: ";
+    cin >> width;
 
+    // init the matrix
+    a = new int*[width];
+    for (int i = 0; i < width; i++) {
+        a[i] = new int[length];
+    }
 
+    // generate the matrix with random values
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < length; j++) {
+            a[i][j] = rand() % 100;
+        }
+    }
 }
 
 // 11. given two 1D arrays a and b, generate the matrix c that c[i][j] = a[i] * b[j]
@@ -186,14 +201,55 @@ int** transposeMatrix(int** a, int length, int width) {
 
 // 14. Concatenate 2 given size-equal matrices, horizontally / vertically.
 int** concatenate2MatricesH(int** a, int** b, int length, int width, int &lres, int &wres) {
+    // init the result matrix
+    lres = 2 * length;
+    wres = width;
+    int **c = new int*[wres];
+    for (int i = 0; i < wres; i++) {
+        c[i] = new int[lres];
+    }
 
+    // concatenate the matrices
+    for (int i = 0; i < wres; i++) {
+        for (int j = 0; j < lres; j++) {
+            if (j < length) {
+                c[i][j] = a[i][j];
+            } else {
+                c[i][j] = b[i][j - length];
+            }
+        }
+    }
+
+    // return the result matrix
+    return c;
 }
 int** concatenate2MatricesV(int** a, int** b, int length, int width, int &lres, int &wres) {
+    // init the result matrix
+    lres = length;
+    wres = 2 * width;
+    int **c = new int*[wres];
+    for (int i = 0; i < wres; i++) {
+        c[i] = new int[lres];
+    }
 
+    // concatenate the matrices
+    for (int i = 0; i < wres; i++) {
+        for (int j = 0; j < lres; j++) {
+            if (i < width) {
+                c[i][j] = a[i][j];
+            } else {
+                c[i][j] = b[i - width][j];
+            }
+        }
+    }
+
+    // return the result matrix
+    return c;
 }
 
 // 15. Multiple 2 given matrices.
 bool multiple2Matrices(int**& res, int** a, int **b, int& lengthr, int& widthr, int lengtha, int widtha, int lengthb, int widthb) {
+    // check if the 2 matrices can be multiplied
     if (lengtha == widthb) {
         lengthr = lengthb;
         widthr = widtha;
@@ -215,34 +271,80 @@ bool multiple2Matrices(int**& res, int** a, int **b, int& lengthr, int& widthr, 
 
 // 16. Given a matrix a. Find the submatrix of a which satisfies keyboard input size and has the largest total value of its elements.
 int** findSubmatrix(int** a, int length, int width, int &lres, int &wres) {
-    
+    // get input size
+    cout << "Enter the length of the submatrix: ";
+    cin >> lres;
+    cout << "Enter the width of the submatrix: ";
+    cin >> wres;
+
+    // check if the input size is valid
+    if (lres > length || wres > width) {
+        cout << "Invalid input size!" << endl;
+        return NULL;
+    }
+
+    // init the submatrix
+    int **res = new int*[wres];
+    for (int i = 0; i < wres; i++) {
+        res[i] = new int[lres];
+        for (int j = 0; j < lres; j++) {
+            res[i][j] = a[i][j];
+        }
+    }
+
+    // find the submatrix with the largest total value
+    int max = 0;
+    for (int i = 0; i < width - wres + 1; i++) {
+        for (int j = 0; j < length - lres + 1; j++) {
+            int sum = 0;
+            for (int k = 0; k < wres; k++) {
+                for (int l = 0; l < lres; l++) {
+                    sum += a[i + k][j + l];
+                }
+            }
+            if (sum > max) {
+                max = sum;
+                for (int k = 0; k < wres; k++) {
+                    for (int l = 0; l < lres; l++) {
+                        res[k][l] = a[i + k][j + l];
+                    }
+                }
+            }
+        }
+    }
+
+    // return the submatrix
+    return res;
 }
 
 
+/*
 int main() {
-    // int *a = new int[5];
-    // int *b = new int[5];
-    // for (int i = 0; i < 5; i++) {
-    //     a[i] = i + 2;
-    //     b[i] = i + 1;
-    // }
-    // printArray(a, 5);
-    // printArray(b, 5);
+    test cases
 
-    // int na = 5;
-    // int nb = 5;
+    int *a = new int[5];
+    int *b = new int[5];
+    for (int i = 0; i < 5; i++) {
+        a[i] = i + 2;
+        b[i] = i + 1;
+    }
+    printArray(a, 5);
+    printArray(b, 5);
 
-    // int cc = 0, cr = 0;
-    // int **c = generateMatrix2(a, b, na, nb, cr, cc);
-    // for (int i = 0; i < cr; i++) {
-    //     for (int j = 0; j < cc; j++) {
-    //         cout << c[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
+    int na = 5;
+    int nb = 5;
 
-    // delete[] a;
-    // delete[] b;
+    int cc = 0, cr = 0;
+    int **c = generateMatrix2(a, b, na, nb, cr, cc);
+    for (int i = 0; i < cr; i++) {
+        for (int j = 0; j < cc; j++) {
+            cout << c[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    delete[] a;
+    delete[] b;
 
 
     int a[] = {1, 7, 3, 2 ,3, 4, 9, 12, 13, 5, 6, 8, 10};
@@ -250,7 +352,48 @@ int main() {
     int *longest = findLongestAscendingSubarray(a, sizeof(a)/sizeof(int), length );
 
     printArray(longest, length);
-    
+
+    srand (time(NULL));
+    int **a;
+    int length = 0;
+    int width = 0;
+    generateMatrix1(a, length, width);
+    for (int i = 0; i < length; i++) {
+        for (int j = 0; j < width; j++) {
+            cout << a[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    // init the matrix
+    int **a;
+    int length = 0;
+    int width = 0;
+    generateMatrix1(a, length, width);
+
+    // print the matrix
+    cout << "The matrix is:" << endl;
+    for (int i = 0; i < length; i++) {
+        for (int j = 0; j < width; j++) {
+            cout << a[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    // find the submatrix with the largest total value
+    int lres = 0;
+    int wres = 0;
+    int **res = findSubmatrix(a, length, width, lres, wres);
+
+    // print the submatrix
+    cout << "The submatrix is:" << endl;
+    for (int i = 0; i < wres; i++) {
+        for (int j = 0; j < lres; j++) {
+            cout << res[i][j] << " ";
+        }
+        cout << endl;
+    }
 
     return 225;
 }
+*/
