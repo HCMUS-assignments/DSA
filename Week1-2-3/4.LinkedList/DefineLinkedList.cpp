@@ -112,7 +112,24 @@ void removeAfter(List* L, int val) {
 
 // 10. Insert an integer at a position of a given List:
 bool addPos(List* &L, int data, int pos) {
-
+    if (L == NULL) {
+        if (pos == 0) {
+            addHead(L, data);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    int count = 0 ;
+    NODE *temp = L->pHead;
+    while (temp != NULL && count < pos) {
+        temp = temp->pNext;
+        count++;
+    }
+    NODE *pNode = createNode(data);
+    pNode->pNext = temp->pNext;
+    temp = pNode;
+    return true;
 }
 
 // 11. Remove an integer at a position of a given List:
