@@ -19,7 +19,7 @@ List* createList(NODE* pNode) {
 // 3. Insert an integer to the head of a given List:
 bool addHead(List* &L, int data) {
     NODE *pNode = createNode(data);
-    if (L == NULL) {
+    if (L->pHead == NULL) {
         L = createList(pNode);
     } else {
         pNode->pNext = L->pHead;
@@ -31,7 +31,7 @@ bool addHead(List* &L, int data) {
 // 4. Insert an integer to the tail of a given List:
 bool addTail(List* &L, int data) {
     NODE *pNode = createNode(data);
-    if (L == NULL) {
+    if (L->pHead == NULL) {
         L = createList(pNode);
     } else {
         L->pTail->pNext = pNode;
@@ -42,7 +42,7 @@ bool addTail(List* &L, int data) {
 
 // 5. Remove the first NODE of a given List:
 void removeHead(List* &L) {
-    if (L == NULL) {
+    if (L->pHead == NULL) {
         return;
     } else {
         NODE *pNode = L->pHead;
@@ -53,7 +53,7 @@ void removeHead(List* &L) {
 
 // 6. Remove the last NODE of a given List:
 void removeTail(List* &L) {
-    if (L == NULL) {
+    if (L->pHead == NULL) {
         return;
     } else {
         NODE *pNode = L->pHead;
@@ -68,7 +68,7 @@ void removeTail(List* &L) {
 
 // 7. Remove all NODE from a given List:
 void removeAll(List* &L) {
-    if (L == NULL) {
+    if (L->pHead == NULL) {
         return;
     } else {
         while (L->pHead != NULL) {
@@ -79,7 +79,7 @@ void removeAll(List* &L) {
 
 // 8. Remove node before the node has val value in a given List:
 void removeBefore(List* L, int val) {
-    if (L == NULL) {
+    if (L->pHead == NULL) {
         return;
     } else {
         NODE *pNode = L->pHead;
@@ -97,7 +97,7 @@ void removeBefore(List* L, int val) {
 
 // 9. Remove node after the node has val value in a given List:
 void removeAfter(List* L, int val) {
-    if (L == NULL) {
+    if (L->pHead == NULL) {
         return;
     } else {
         NODE *pNode = L->pHead;
@@ -112,7 +112,7 @@ void removeAfter(List* L, int val) {
 
 // 10. Insert an integer at a position of a given List:
 bool addPos(List* &L, int data, int pos) {
-    if (L == NULL) {
+    if (L->pHead == NULL) {
         if (pos == 0) {
             addHead(L, data);
             return true;
@@ -134,7 +134,18 @@ bool addPos(List* &L, int data, int pos) {
 
 // 11. Remove an integer at a position of a given List:
 void removePos(List* &L, int pos) {
-
+    if (L->pHead == NULL ) {
+        return;
+    }
+    NODE *pNode = L->pHead;
+    int count = 0;
+    while (pNode != NULL && count < pos - 1) {
+        pNode = pNode->pNext;
+        count++;
+    }
+    NODE *temp = pNode->pNext;
+    pNode->pNext = temp->pNext;
+    delete temp;
 }
 
 // 12. Insert an integer before a value of a given List:
@@ -144,6 +155,22 @@ bool addBefore(List* L, int data, int val) {
 
 // 13. Insert an integer after a value of a given List:
 bool addAfter(List* L, int data, int val) {
+    if (L->pHead == NULL) {
+        return false;
+    }
+    NODE *temp = L->pHead;
+    while (temp != NULL && temp->key != val) {
+        temp = temp->pNext;
+    }
+    if (temp == NULL) {
+        // don't have val in list
+        return false;
+    } else {
+        NODE *pNode = createNode(data);
+        pNode->pNext = temp->pNext;
+        temp->pNext = pNode;
+        return true;
+    }
 
 }
 
