@@ -220,7 +220,16 @@ int countElements(List* L) {
 
 // 16. Create a new List by reverse a given List:
 List* reverseList(List* L){
-
+    if (L->pHead == NULL) {
+        return NULL;
+    }
+    NODE *pNode = L->pHead;
+    List *L2 = createList(pNode);
+    while (pNode->pNext != NULL) {
+        pNode = pNode->pNext;
+        addHead(L2, pNode->key);
+    }
+    return L2;
 }
 
 // 17. Remove all duplicates from a given List:
