@@ -150,7 +150,22 @@ void removePos(List* &L, int pos) {
 
 // 12. Insert an integer before a value of a given List:
 bool addBefore(List* L, int data, int val) {
-
+    if (L->pHead == NULL) {
+        return false;
+    } 
+    NODE *pNode = L->pHead;
+    while (pNode != NULL && pNode->pNext->key != val) {
+        pNode = pNode->pNext;
+    }
+    if (pNode == NULL) {
+        // val not found
+        return false;
+    } else {
+        NODE *temp = createNode(data);
+        temp->pNext = pNode->pNext;
+        pNode->pNext = temp;
+    }
+    return true;
 }
 
 // 13. Insert an integer after a value of a given List:
