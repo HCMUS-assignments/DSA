@@ -234,11 +234,53 @@ List* reverseList(List* L){
 
 // 17. Remove all duplicates from a given List:
 void removeDuplicate(List* &L) {
-
+    if (L->pHead == NULL) {
+        return ;
+    }
+    NODE *pNode = L->pHead;
+    NODE *temp = pNode->pNext;
+    while (pNode != NULL) {
+        temp = pNode->pNext;
+        while (temp != NULL) {
+            if (pNode->key == temp->key) {
+                // remove temp
+                NODE *pNode2 = L->pHead;
+                while (pNode2->pNext != temp) {
+                    pNode2 = pNode2->pNext;
+                }
+                pNode2->pNext = temp->pNext;
+                delete temp;
+                temp = pNode2->pNext;
+            } else {
+                temp = temp->pNext;
+            }
+            
+        }
+        pNode = pNode->pNext;
+    }
 }
 
 // 18. Remove all key value from a given List:
 bool removeElement(List* &L, int key) {
+    if (L->pHead == NULL) {
+        return false;
+    }
     
+    // check if the first node is have key value
+    while (L->pHead->key == key) {
+        removeHead(L);
+    }
+
+    NODE *pNode = L->pHead;
+    while (pNode->pNext != NULL) {
+        if (pNode->pNext->key == key) {
+            NODE *temp = pNode->pNext;
+            pNode->pNext = temp->pNext;
+            delete temp;
+        } else {
+            pNode = pNode->pNext;
+        }
+    }
+    return true;
 }
 
