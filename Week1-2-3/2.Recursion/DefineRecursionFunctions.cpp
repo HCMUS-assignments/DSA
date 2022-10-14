@@ -43,13 +43,63 @@ bool IsAllDigitsEven(int n) {
     return IsAllDigitsEven(n % 2) && IsAllDigitsEven(n / 10);
 }
 
+// some finding greatest common divisor functions supporting the sixth function
+
+// the first way: using a - b / if a == b => return a;
+int UCLN_1 (int a, int b) {
+    while (a != b) {
+        if (a > b ) {
+            a = a - b;
+        } else {
+            b = b - a;
+        }
+    }
+    return a;
+}
+
+// the second way: using a mod b operator / if a == 0 || b == 0 return a + b;
+int UCLN_2 (int a, int b) {
+    while (a != 0 && b != 0) {
+        if (a > b) {
+            a = a % b;
+        } else {
+            b = b % a;
+        }
+    }
+    return a + b;
+}
+
+// the third way: using recursion: 
+int UCLN_3 (int a, int b) {
+    if (b == 0) {
+        return a;
+    }
+    return UCLN_3(b, a % b);
+}
+
 // 6. Count the number of common divisor of 2 given integers.
 int CountCommonDivisor(int a, int b) {
-    
+    /*  1. find the greatest common divisor of a and b 
+        2. count the number of divisor of that number */ 
+
+    // 1. find the greatest common divisor:
+    int ucln = UCLN_2(a,b);
+
+    // 2. count the number of divisor of ucln
+    int count = 2;
+    for (int i = 2; i <= ucln/2; i++) {
+        if (ucln % i == 0) {
+            count ++;
+        }
+    }
+    return count ;
 }
 
 // 7. Calculate the Greatest common divisor and Least common multiple of 2 given integers.
-int GCD(int a, int b) {
+int GCD(int a, int b) {  
+    // find the greatest common divisor of a and b
+
+    // find the least common multiple of a and b
 
 }
 
@@ -91,11 +141,18 @@ void Permutation(char* a, int n) {
 int main() {
     // test cases
 
-    cout << Reverse(22503) << endl;
-    cout << IsAllDigitsEven(22503) << endl;
+    // cout << Reverse(22503) << endl;
+    // cout << IsAllDigitsEven(22503) << endl;
 
-    char s[] = "ABCD";
-    Permutation(s, 4);
+    // char s[] = "ABCD";
+    // Permutation(s, 4);
+
+    // test ucln
+    // cout << UCLN_1(125,75) << endl;
+    // cout << UCLN_2(185, 15) << endl;
+    // cout << UCLN_3(144, 13) << endl;
+
+    // cout << CountCommonDivisor(180, 45) << endl;
 
     return 225;
 }
