@@ -240,8 +240,8 @@ List* reverseList(List* L){
     if (L->pHead == NULL) {
         return NULL;
     }
+    List * L2 = createList(createNode(L->pHead->key));
     NODE *pNode = L->pHead;
-    List *L2 = createList(pNode);
     while (pNode->pNext != NULL) {
         pNode = pNode->pNext;
         addHead(L2, pNode->key);
