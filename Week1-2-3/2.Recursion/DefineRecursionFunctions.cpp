@@ -95,12 +95,15 @@ int CountCommonDivisor(int a, int b) {
     return count ;
 }
 
-// 7. Calculate the Greatest common divisor and Least common multiple of 2 given integers.
+// 7. Find the least common multiple of 2 given integers.
 int GCD(int a, int b) {  
     // find the greatest common divisor of a and b
+    int ucln = UCLN_2(a, b);
 
     // find the least common multiple of a and b
+    int bcnn = a * b / ucln;
 
+    return bcnn;
 }
 
 // 8. Calculate the reverse value of a given integer.
@@ -153,6 +156,8 @@ int main() {
     // cout << UCLN_3(144, 13) << endl;
 
     // cout << CountCommonDivisor(180, 45) << endl;
+
+    // cout << GCD(15, 90) << endl;
 
     return 225;
 }
