@@ -122,13 +122,23 @@ bool addPos(List* &L, int data, int pos) {
     }
     int count = 0 ;
     NODE *temp = L->pHead;
+    NODE *prev = temp;
     while (temp != NULL && count < pos) {
-        temp = temp->pNext;
         count++;
+        if (temp->pNext == NULL) {
+            if (count == pos ) {
+                // insert at the tail
+                addTail(L, data);
+            } else {
+                return false;
+            }
+        }
+        prev = temp;
+        temp = temp->pNext;
     }
     NODE *pNode = createNode(data);
-    pNode->pNext = temp->pNext;
-    temp = pNode;
+    pNode->pNext = temp;
+    prev->pNext = pNode;
     return true;
 }
 
@@ -139,13 +149,20 @@ void removePos(List* &L, int pos) {
     }
     NODE *pNode = L->pHead;
     int count = 0;
-    while (pNode != NULL && count < pos - 1) {
+    while (pNode != NULL && count != pos) {
+        count ++;
         pNode = pNode->pNext;
-        count++;
     }
-    NODE *temp = pNode->pNext;
-    pNode->pNext = temp->pNext;
-    delete temp;
+    if (pNode == NULL) {
+        // not have the pos element
+        return;
+    }
+    NODE *temp = L->pHead;
+    while (temp->pNext != pNode) {
+        temp = temp->pNext;
+    }
+    temp->pNext = pNode->pNext;
+    delete pNode;
 }
 
 // 12. Insert an integer before a value of a given List:
