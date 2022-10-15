@@ -14,7 +14,7 @@ void createList(int a[], int n, Node *&list) {
     for (int i = 0; i < n; i++) {
         Node *node = new Node;
         node->data = a[i];
-        node->pNext = NULL;
+        node->pNext = NULL;  
         p->pNext = node;
         p = p->pNext;
     }

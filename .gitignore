@@ -1,2 +1,4 @@
 # bỏ các file thực thi .exe
 *.exe
+*.zip
+*.rar
