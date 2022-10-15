@@ -75,36 +75,81 @@ Examinee readExaminee (string line_info) {
     token = splitWithComma(line_info);
     examinee.foreign_language = checkScore(token);
 
-    outputExaminee(examinee);
-
     return examinee;
 }
 
-int main() {
-    
-    // declare string line_info
-    string stringIgnore;
-    string line_info;
+// 2. Read the information of all examinees:
+vector <Examinee> readExamineeList(string file_name) {
+    fstream fin(file_name, ios::in) ;
 
-    // open data.txt
-    fstream data("data.txt", ios::in);
-
-    // check whether file is opened or not
-    if (data.fail()) {
-        cout << "Error opening file" << endl;
+    // check whether opening file fail or not
+    if (fin.fail()) {
+        cout << "fail opening file" << endl;
         exit(225);
     }
+    vector <Examinee> listExaminee;
     
-    // read a line of data.txt
-    getline(data, stringIgnore);
-    cout << stringIgnore << endl;
-    getline(data, line_info);
-    cout << line_info << endl;
+    // ignore the first line of file
+    string line_info;
+    getline(fin, line_info);
 
-    readExaminee(line_info);
+    // read the information util end of file
+    int count = 0;
+    while ( count < 100) {
+        count ++;
+        getline(fin, line_info);
+        Examinee examinee = readExaminee(line_info);
+        listExaminee.push_back(examinee);
+    }
     
-    // close data.txt
-    data.close();
+    // close file
+    fin.close();
+}
+
+// 3. Write the total score of examinees to file
+void writeScores(vector <Examinee> examinee_list, string out_file_name) {
+    // open file 
+    fstream fout(out_file_name, ios :: out);
+    
+    // check whether opening file success or not
+    if (fout.fail()) {
+        cout << "opening file not success " << endl;
+        return;
+    }
+
+    // declare some necessary variable 
+    double totalScore = 0;
+    float BB = 0, KHTN = 0, KHXH = 0;
+
+    // write header information in output file
+    fout << "SBD BB KHTN KHXH" << endl;
+
+    for (int i = 0; i < examinee_list.size(); i++) {
+        // calculate 
+        BB = examinee_list[i].maths + examinee_list[i].literature + examinee_list[i].foreign_language;
+        KHTN = examinee_list[i].physics + examinee_list[i].chemistry + examinee_list[i].biology;
+        KHXH = examinee_list[i].history + examinee_list[i].geography + examinee_list[i].civic_education;
+        totalScore += examinee_list[i].maths + examinee_list[i].literature + examinee_list[i].foreign_language + KHTN + KHXH;
+        
+        // output to file
+        fout << examinee_list[i].id << " " << BB << " " << KHTN << " " << KHXH << endl;
+    }
+
+    // write the total score to file 
+    fout << "The total score: " << totalScore << endl ;
+
+    // close file
+    fout.close();
+}
+
+int main() {
+    vector <Examinee> list_examinees;
+
+    // read information from input file
+    list_examinees = readExamineeList("data.txt");
+
+    // write the total score to output file
+    writeScores(list_examinees, "output.txt");
 
     return 225;
 }
