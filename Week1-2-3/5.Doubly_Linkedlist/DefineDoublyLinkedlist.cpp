@@ -39,6 +39,7 @@ bool addTail(DList* &L, int data) {
         return true;
     }
     pNode->pPrev = L->pTail;
+    L->pTail->pNext = pNode;
     L->pTail = pNode;
     return true;
 
@@ -61,6 +62,7 @@ void removeTail(DList* &L) {
         return;
     }
     DNODE *pNode = L->pTail;
+    L->pTail->pPrev->pNext = NULL;
     L->pTail = L->pTail->pPrev;
     delete pNode;
 }
@@ -171,7 +173,9 @@ void removePos(DList* &L, int pos) {
                 return;
             }
         }
+        pNode = pNode->pNext;
     }
+
     pNode->pPrev->pNext = pNode->pNext;
     pNode->pNext->pPrev = pNode->pPrev;
     delete pNode;
@@ -227,6 +231,9 @@ void printList(DList* L) {
     if (L->pHead == NULL) {
         return;
     }
+
+    cout << "List: ";
+
     DNODE *pNode = L->pHead;
     while (pNode != NULL) {
         cout << pNode->key << " ";
@@ -266,16 +273,22 @@ void removeDuplicate(DList* &L) {
         return ;
     }
     DNODE *pNode = L->pHead;
+    int i = 0;
     while (pNode != NULL) {
         DNODE *temp = pNode->pNext;
         while (temp != NULL) {
             if (temp->key == pNode->key) {
                 // remove temp
-                temp->pPrev->pNext = temp->pNext;
-                temp->pNext->pPrev = temp->pPrev;
-                DNODE *pNode = temp->pNext;
-                delete temp;
-                temp = pNode;
+                if (temp->pNext == NULL) {
+                    temp = temp->pNext;
+                    removeTail(L);
+                } else {
+                    temp->pPrev->pNext = temp->pNext;
+                    temp->pNext->pPrev = temp->pPrev;
+                    DNODE *pNode2 = temp;
+                    temp = temp->pNext;
+                    delete pNode2;
+                }
             } else {
                 temp = temp->pNext;
             }
@@ -308,5 +321,70 @@ bool removeElement(DList* &L, int key) {
         }
     }
     return true;
+
+}
+
+int main() {
+    DNODE *FirstNode = createDNode(1);
+    DList *L = createDList(FirstNode);
+    addTail(L, 2);
+    addTail(L, 3);
+    addTail(L, 4);
+    addTail(L, 5);
+    addTail(L, 6);
+    addTail(L, 7);
+    addTail(L, 8);
+    addTail(L, 9);
+    addTail(L, 10);
+    printList(L);
+    cout << endl;
+
+    cout << "Add 11 to head: ";
+    addHead(L, 11);
+    printList(L);
+
+    cout << endl << "Add 12 to tail: ";
+    addTail(L, 12);
+    printList(L);
+
+    cout << endl << "Remove head: ";
+    removeHead(L);
+    printList(L);
+
+    cout << endl << "Remove tail: ";
+    removeTail(L);
+    printList(L);
+
+    cout << endl << "Remove element at position 5: ";
+    removePos(L, 5);
+    printList(L);
+
+    cout << endl << "Insert 13 before 5: ";
+    addBefore(L, 13, 5);
+    printList(L);
+
+    cout << endl << "Insert 14 after 5: ";
+    addAfter(L, 14, 5);
+    printList(L);
+
+    cout << endl << "Count elements: " << countElements(L);
+
+    cout << endl << "Reverse list: ";
+    DList *L2 = reverseList(L);
+    printList(L2);
+
+    cout << endl << "Remove duplicate: ";
+    addTail(L, 5);
+    addTail(L, 5);
+    printList(L);
+    removeDuplicate(L);
+    printList(L);
+
+    cout << endl << "Remove element 5: ";
+    printList(L2);
+    removeElement(L2, 5);
+    printList(L2);
+
+    return 225;
 
 }
