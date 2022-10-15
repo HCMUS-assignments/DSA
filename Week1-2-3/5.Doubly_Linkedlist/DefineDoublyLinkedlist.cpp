@@ -27,6 +27,7 @@ bool addHead(DList* &L, int data) {
         return true;
     }
     pNode->pNext = L->pHead;
+    L->pHead->pPrev = pNode;
     L->pHead = pNode;
     return true;
 }
@@ -311,11 +312,16 @@ bool removeElement(DList* &L, int key) {
     while (temp != NULL) {
         if (temp->key == key) {
             // remove temp
-            DNODE *pNode = temp;
-            temp->pPrev->pNext = temp->pNext;
-            temp->pNext->pPrev = temp->pPrev;
-            temp = temp->pNext;
-            delete pNode;
+            if (temp->pNext == NULL) {
+                temp = temp->pNext;
+                removeTail(L);
+            } else {
+                DNODE *pNode = temp;
+                temp->pPrev->pNext = temp->pNext;
+                temp->pNext->pPrev = temp->pPrev;
+                temp = temp->pNext;
+                delete pNode;
+            }
         } else {
             temp = temp->pNext;
         }
@@ -323,6 +329,7 @@ bool removeElement(DList* &L, int key) {
     return true;
 
 }
+
 
 int main() {
     DNODE *FirstNode = createDNode(1);
