@@ -1,79 +1,81 @@
-/*
-Fulfill the following requirements:
-1. Read the information of one examinee:
-• Examinee readExaminee(string line_info);
-• Input: line_info - a line from "data.txt" which provides the information of 1 examinee.
-• Output: Return Examinee variable, which stores the info of the given examinee.
-2. Read the information of a list of examinees:
-• vector<Examinee> readExamineeList(string file_name);
-• Input: file_name - path to input file "data.txt".
-• Output: vector<Examinee> variable, which store the info of all examinees from the file.
-3. Write the total score of examinees to file:
-• void writeScores(vector<Examinee> examinee_list, string out_file_name);
-• Input: examinee_list - List of examinees.
-out_file_name - name of file to write.
-• Output: Calculate the sum score of three subjects Maths, Literature, and Foreign language
-(Compulsory Scores - BB) of each examinee and write to the out_file_name file using the
-following format:
-– The first line contains header information: "SBD BB KHTN KHXH"
-– Each next line contains info of only one examinee: ID, Compulsory Scores, Natural Sciences
-Scores, and Social Sciences Scores separated by a single space.
-• Example:
-SDB BB KHTN KHXH
-XX001 28.0 29.25 0.0
-...
-XX999 20.0 0.0 28.75
-The total score is calculated as follows:
-• The score of Natural Sciences and Social Sciences column in data.txt is not available by default.
-Calculate the score for each combination and store them into struct Examinee.
-• The score of Natural Sciences combination = physics + chemistry + biology
-• The score of Social Sciences combination = history + geography + civic education
-• The total score = maths + literature + foreign language + natural sciences + social sciences
-*/
-
 #include "Examinee.h"
 
+// check the field of a subject and assign score to subject
+float checkScore(string token) {
+    if (token == "") {
+        return 0;
+    } else {
+        return stof(token);
+    }
+}
+
+// split string by delimiter comma 
+string splitWithComma(string &str) {
+    int pos = str.find(',');
+    if (pos != -1) {
+        string token = str.substr(0, pos);
+        str.erase(0, pos + 1);
+        return token;
+    } else {
+        return str;
+    }
+}
+
+// printf the information of a examinee
+void outputExaminee (Examinee examinee) {
+    cout << "ID: " << examinee.id << endl;
+    cout << "Maths: " << examinee.maths << endl;
+    cout << "Literature: " << examinee.literature << endl;
+    cout << "Physics: " << examinee.physics << endl;
+    cout << "Chemistry: " << examinee.chemistry << endl;
+    cout << "Biology: " << examinee.biology << endl;
+    cout << "History: " << examinee.history << endl;
+    cout << "Geography: " << examinee.geography << endl;
+    cout << "Civic Education: " << examinee.civic_education << endl;
+    cout << "Foreign Language: " << examinee.foreign_language << endl;
+}
+
+// 1. Read the information of one examinee:
 Examinee readExaminee (string line_info) {
     // declare examinee variable
     Examinee examinee;
 
-    // divide string with comma
-    stringstream ss(line_info);
+    // split string with comma
     string token;
-    if (ss >> token) {
-            // store data into examinee variable
-            examinee.id = token;
 
-            // ignore full name
-            ss >> token;
+    // store data into examinee variable
+    token = splitWithComma(line_info);
+    examinee.id = token;
 
-            ss >> token;
-            examinee.maths = stof(token);
-            ss >> token;
-            examinee.literature = stof(token);
-            ss >> token;
-            examinee.physics = stof(token);
-            ss >> token;
-            examinee.chemistry = stof(token);
-            ss >> token;
-            examinee.biology = stof(token);
-            ss >> token;
-            examinee.history = stof(token);
-            ss >> token;
-            examinee.geography = stof(token);
-            ss >> token;
-            examinee.civic_education = stof(token);
+    // ignore full name
+    token = splitWithComma(line_info);
 
-            // ignore KHTN, KHXH
-            ss >> token;
-            ss >> token;
+    // split string with comma to get the score of each subject
+    token = splitWithComma(line_info);
+    examinee.maths = checkScore(token);
+    token = splitWithComma(line_info);
+    examinee.literature = checkScore(token);
+    token = splitWithComma(line_info);
+    examinee.physics = checkScore(token);
+    token = splitWithComma(line_info);
+    examinee.chemistry = checkScore(token);
+    token = splitWithComma(line_info);
+    examinee.biology = checkScore(token);
+    token = splitWithComma(line_info);
+    examinee.history = checkScore(token);
+    token = splitWithComma(line_info);
+    examinee.geography = checkScore(token);
+    token = splitWithComma(line_info);
+    examinee.civic_education = checkScore(token);
 
-            ss >> token;
-            examinee.foreign_language = stof(token);
-    }
+    // ignore KHTN, KHXH
+    token = splitWithComma(line_info);
+    token = splitWithComma(line_info);
 
-    // print examinee variable
-    cout << examinee.id << " " << examinee.maths << " " << examinee.literature << " " << examinee.physics << " " << examinee.chemistry << " " << examinee.biology << " " << examinee.history << " " << examinee.geography << " " << examinee.civic_education << " " << examinee.foreign_language << endl;
+    token = splitWithComma(line_info);
+    examinee.foreign_language = checkScore(token);
+
+    outputExaminee(examinee);
 
     return examinee;
 }
@@ -81,6 +83,7 @@ Examinee readExaminee (string line_info) {
 int main() {
     
     // declare string line_info
+    string stringIgnore;
     string line_info;
 
     // open data.txt
@@ -93,11 +96,12 @@ int main() {
     }
     
     // read a line of data.txt
+    getline(data, stringIgnore);
+    cout << stringIgnore << endl;
     getline(data, line_info);
-    getline(data, line_info);
+    cout << line_info << endl;
 
-    readExaminee("data.txt");
-
+    readExaminee(line_info);
     
     // close data.txt
     data.close();
