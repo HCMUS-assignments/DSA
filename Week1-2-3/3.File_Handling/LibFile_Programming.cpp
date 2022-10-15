@@ -94,16 +94,21 @@ vector <Examinee> readExamineeList(string file_name) {
     getline(fin, line_info);
 
     // read the information util end of file
-    int count = 0;
-    while ( count < 100) {
-        count ++;
+    while ( ! fin.eof()) {
         getline(fin, line_info);
         Examinee examinee = readExaminee(line_info);
         listExaminee.push_back(examinee);
     }
+
+    // check if the final examinee gotten from empty line
+    if (listExaminee[listExaminee.size() - 1].id == "" ) {
+        listExaminee.pop_back();
+    }
     
     // close file
     fin.close();
+
+    return listExaminee;
 }
 
 // 3. Write the total score of examinees to file
@@ -134,6 +139,7 @@ void writeScores(vector <Examinee> examinee_list, string out_file_name) {
         // output to file
         fout << examinee_list[i].id << " " << BB << " " << KHTN << " " << KHXH << endl;
     }
+ 
 
     // write the total score to file 
     fout << "The total score: " << totalScore << endl ;
@@ -147,9 +153,12 @@ int main() {
 
     // read information from input file
     list_examinees = readExamineeList("data.txt");
-
+    
     // write the total score to output file
-    writeScores(list_examinees, "output.txt");
+    string out_file_name = "output.txt";
+    writeScores(list_examinees, out_file_name);
+
+    cout << "successfully" << endl;
 
     return 225;
 }
