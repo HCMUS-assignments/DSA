@@ -330,7 +330,7 @@ bool removeElement(DList* &L, int key) {
 
 }
 
-
+/* 
 int main() {
     DNODE *FirstNode = createDNode(1);
     DList *L = createDList(FirstNode);
@@ -393,5 +393,5 @@ int main() {
     printList(L2);
 
     return 225;
-
 }
+*/

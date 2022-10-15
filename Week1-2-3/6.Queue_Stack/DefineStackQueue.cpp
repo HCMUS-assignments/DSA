@@ -10,7 +10,7 @@ NODE *createNode (int data) {
 
 // 1. Initialize a stack from a given key:
 STACK* createStack(int data) {
-    STACK *S = NULL;
+    STACK *S = new STACK;
     S->top = createNode(data);
     return S;
 }
@@ -64,10 +64,10 @@ bool isEmpty(STACK* S) {
 // 6. Initialize a queue from a given key:
 QUEUE* createQueue(int data) {
     NODE *pNode = createNode(data);
-    QUEUE *queue = NULL;
+    QUEUE *queue = new QUEUE;
     queue->front = pNode;
     queue->rear = pNode;
-    queue->count ++;
+    queue->count  = 1;
     return queue;
 }
 
@@ -98,7 +98,7 @@ int dequeue(QUEUE* &Q) {
 }
 
 // 9. Count the number of element of a given queue:
-int countElements(QUEUE* Q) {
+int countElements(QUEUE* &Q) {
     return Q->count;
 }
 
@@ -109,3 +109,65 @@ bool isEmpty(QUEUE* Q) {
     }
     return false;   
 }
+
+/*
+int main() {
+    STACK *S = createStack(1);
+    push(S, 1);
+    push(S, 2);
+    push(S, 3);
+    push(S, 4);
+    push(S, 5);
+    push(S, 6);
+    push(S, 7);
+    push(S, 8);
+    push(S, 9);
+    push(S, 10);
+    cout << "Count elements of stack: " << countElements(S) << endl;
+    cout << "Pop element: " << pop(S) << endl;
+    cout << "Pop element: " << pop(S) << endl;
+    cout << "Pop element: " << pop(S) << endl;
+    cout << "Pop element: " << pop(S) << endl;
+    cout << "Pop element: " << pop(S) << endl;
+    cout << "Pop element: " << pop(S) << endl;
+    cout << "Pop element: " << pop(S) << endl;
+    cout << "Pop element: " << pop(S) << endl;
+    cout << "Pop element: " << pop(S) << endl;
+    cout << "Pop element: " << pop(S) << endl;
+    cout << "Count elements of stack: " << countElements(S) << endl;
+    cout << "Is stack empty: " << isEmpty(S) << endl;
+    cout << "Pop element: " << pop(S) << endl;
+
+    cout << "--------------------------------------------" << endl;
+    QUEUE *Q = createQueue(1);
+    enqueue(Q, 1);
+    enqueue(Q, 2);
+    enqueue(Q, 3);
+    enqueue(Q, 4);
+    enqueue(Q, 5);
+    enqueue(Q, 6);
+    enqueue(Q, 7);
+    enqueue(Q, 8);
+    enqueue(Q, 9);
+    enqueue(Q, 10);
+    cout << "Count elements of queue: " << countElements(Q) << endl;
+    cout << "Dequeue element: " << dequeue(Q) << endl;
+    cout << "Dequeue element: " << dequeue(Q) << endl;
+    cout << "Dequeue element: " << dequeue(Q) << endl;
+    cout << "Dequeue element: " << dequeue(Q) << endl;
+    cout << "Dequeue element: " << dequeue(Q) << endl;
+    cout << "Dequeue element: " << dequeue(Q) << endl;
+    cout << "Dequeue element: " << dequeue(Q) << endl;
+    cout << "Dequeue element: " << dequeue(Q) << endl;
+    cout << "Dequeue element: " << dequeue(Q) << endl;
+    cout << "Dequeue element: " << dequeue(Q) << endl;
+
+
+    cout << "Count elements of queue: " << countElements(Q) << endl;
+    cout << "Is queue empty: " << isEmpty(Q) << endl;
+    cout << "Dequeue element: " << dequeue(Q) << endl;
+
+    return 225;
+
+}
+*/

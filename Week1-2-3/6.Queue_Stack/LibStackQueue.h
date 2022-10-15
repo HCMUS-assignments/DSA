@@ -11,7 +11,7 @@ struct STACK {
 };
 
 struct QUEUE {
-    int count;
+    int count = 0;
     NODE *front;
     NODE *rear;
 };
@@ -41,7 +41,7 @@ bool enqueue(QUEUE* &Q, int data) ;
 int dequeue(QUEUE* &Q) ;
 
 // 9. Count the number of element of a given queue:
-int countElements(QUEUE* Q) ;
+int countElements(QUEUE* &Q) ;
 
 // 10. Determine if a given queue is empty:
 bool isEmpty(QUEUE* Q) ;
