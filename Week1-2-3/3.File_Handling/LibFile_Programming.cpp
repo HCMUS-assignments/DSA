@@ -51,29 +51,12 @@ Examinee readExaminee (string line_info) {
     token = splitWithComma(line_info);
 
     // split string with comma to get the score of each subject
-    token = splitWithComma(line_info);
-    examinee.maths = checkScore(token);
-    token = splitWithComma(line_info);
-    examinee.literature = checkScore(token);
-    token = splitWithComma(line_info);
-    examinee.physics = checkScore(token);
-    token = splitWithComma(line_info);
-    examinee.chemistry = checkScore(token);
-    token = splitWithComma(line_info);
-    examinee.biology = checkScore(token);
-    token = splitWithComma(line_info);
-    examinee.history = checkScore(token);
-    token = splitWithComma(line_info);
-    examinee.geography = checkScore(token);
-    token = splitWithComma(line_info);
-    examinee.civic_education = checkScore(token);
-
-    // ignore KHTN, KHXH
-    token = splitWithComma(line_info);
-    token = splitWithComma(line_info);
-
-    token = splitWithComma(line_info);
-    examinee.foreign_language = checkScore(token);
+    float subjects[11] = {0};
+    for (int i = 0; i < 11; i++) {
+        token = splitWithComma(line_info);
+        subjects[i] = checkScore(token);
+    }
+    memcpy(&examinee.maths, subjects, sizeof(float) * 11);
 
     return examinee;
 }
