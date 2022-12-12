@@ -1,8 +1,10 @@
-#include "lib.h"
+// #include "lib.h"
+#include <bits/stdc++.h>
+using namespace std;
 
 
-// Đọc ma trận kề từ file
-void readAdjMatrix (string fileName, int **a, int &n) {
+// Đọc ma trận kề từ file (done)
+void readAdjMatrix (string fileName, int **&a, int &n) {
     fstream fin(fileName, ios::in) ;
     if (fin.fail()) {
         cout << "Failing open file !" << endl;
@@ -20,7 +22,7 @@ void readAdjMatrix (string fileName, int **a, int &n) {
     fin.close();
 }
 
-// Đọc danh sách kề từ file
+// Đọc danh sách kề từ file (done)
 void readAdjList (string fileName, vector <vector<int>> &list, int &n) {
     ifstream fin(fileName, ios::in);
     if (fin.fail()) {
@@ -32,7 +34,7 @@ void readAdjList (string fileName, vector <vector<int>> &list, int &n) {
     string line;
     for (int i = 0; i < n; i++) {
         vector <int> temp;
-        getline(cin, line);
+        getline(fin, line);
         // tách số bởi dấu cách và đẩy vào vector
         stringstream ss(line);
         string token;
@@ -41,9 +43,10 @@ void readAdjList (string fileName, vector <vector<int>> &list, int &n) {
         }
         list.push_back(temp);
     }
+    fin.close();
 }
 
-// xuất danh sách kề
+// xuất danh sách kề (done)
 void printAdjList (vector <vector<int>> list, int n) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < list[i].size(); j++) {
@@ -53,8 +56,9 @@ void printAdjList (vector <vector<int>> list, int n) {
     }
 }
 
-// xuất ma trận kề
+// xuất ma trận kề (done)
 void printAdjMatrix (int **a, int n) {
+    cout << "Adjacency matrix: " << endl;
     for (int i = 0; i < n ; i++) {
         for (int j = 0; j < n; j++) {
             cout << a[i][j] << " ";
@@ -68,8 +72,36 @@ void printAdjMatrix (int **a, int n) {
 
 // I. Implement functions to provide information about a given graph
 
-// 1. check a graph is directed or undirected
-bool isDirected (int **a, int n);
+// 1. check a graph is directed or undirected: kiểm tra liệu đồ thị có hướng hay vô hướng
+bool isDirected (int **a, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (a[i][j] != a[j][i]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool isDirected (vector <vector<int>> list, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < list[i].size(); j++) {
+            int v = list[i][j]; // đỉnh i kề với đỉnh v
+            bool found = false;
+            for (int k = 0; k < list[v].size(); k++) {
+                if (list[v][k] == i) { // đỉnh v cũng kề với đỉnh i
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 // 2. cal the number of edges and number of vertices
 int numEdges (int **a, int n);
@@ -114,3 +146,22 @@ int numVertices (int **a, int n);
 
 // 11.3. find the shortest path between 2 vertices of a graph using Floyd-Warshall algorithm
 
+
+
+
+int main() {
+    // đọc ma trận kề từ file
+    int **a;
+    int n1;
+    readAdjMatrix("adjMatrix1.txt", a, n1);
+    printAdjMatrix(a, n1);
+
+    // đọc danh sách kề từ file
+    vector <vector<int>> list;
+    int n2;
+    readAdjList("adjList1.txt", list, n2);
+    printAdjList(list, n2);
+
+
+    return 225;
+}

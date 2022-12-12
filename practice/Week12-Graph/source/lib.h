@@ -5,7 +5,7 @@ using namespace std;
 void readAdjList (string fileName, vector <vector<int>> &list, int &n) ;
 
 // Đọc ma trận kề từ file
-void readAdjMatrix (string fileName, int **a, int &n) ;
+void readAdjMatrix (string fileName, int **&a, int &n) ;
 
 // xuất danh sách kề
 void printAdjList (vector <vector<int>> list, int n) ;
