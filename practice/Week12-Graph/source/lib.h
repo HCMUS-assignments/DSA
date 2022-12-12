@@ -1,6 +1,20 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// Đọc danh sách kề từ file
+void readAdjList (string fileName, vector <vector<int>> &list, int &n) ;
+
+// Đọc ma trận kề từ file
+void readAdjMatrix (string fileName, int **a, int &n) ;
+
+// xuất danh sách kề
+void printAdjList (vector <vector<int>> list, int n) ;
+
+// xuất ma trận kề
+void printAdjMatrix (int **a, int n) ;
+
+// --------------------------------------------------------------
+
 // I. Implement functions to provide information about a given graph
 
 // 1. check a graph is directed or undirected

@@ -2,8 +2,67 @@
 
 
 // Đọc ma trận kề từ file
+void readAdjMatrix (string fileName, int **a, int &n) {
+    fstream fin(fileName, ios::in) ;
+    if (fin.fail()) {
+        cout << "Failing open file !" << endl;
+        return;
+    }
+
+    fin >> n;
+    a = new int*[n];
+    for (int i = 0; i < n ; i++) {
+        a[i] = new int[n];
+        for (int j = 0; j < n; j++) {
+            fin >> a[i][j];
+        }
+    }
+    fin.close();
+}
 
 // Đọc danh sách kề từ file
+void readAdjList (string fileName, vector <vector<int>> &list, int &n) {
+    ifstream fin(fileName, ios::in);
+    if (fin.fail()) {
+        cout << "Failing open file !" << endl;
+        return;
+    }
+
+    fin >> n;
+    string line;
+    for (int i = 0; i < n; i++) {
+        vector <int> temp;
+        getline(cin, line);
+        // tách số bởi dấu cách và đẩy vào vector
+        stringstream ss(line);
+        string token;
+        while (getline(ss, token, ' ')) {
+            temp.push_back(stoi(token));
+        }
+        list.push_back(temp);
+    }
+}
+
+// xuất danh sách kề
+void printAdjList (vector <vector<int>> list, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < list[i].size(); j++) {
+            cout << list[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+// xuất ma trận kề
+void printAdjMatrix (int **a, int n) {
+    for (int i = 0; i < n ; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << a[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
 
 // --------------------------------------------------------------
 
