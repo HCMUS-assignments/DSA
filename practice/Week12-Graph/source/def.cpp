@@ -11,9 +11,9 @@ struct Graph {
     int edges; // number of edges
     bool isDirected; // true if graph is directed
 
-    int *deg; // degree of each vertex (undirected graph)
-    int *inDeg; // in-degree of each vertex (directed graph)
-    int *outDeg; // out-degree of each vertex (directed graph)
+    vector <int> deg; // degree of each vertex (undirected graph)
+    vector <int> inDeg; // in-degree of each vertex (directed graph)
+    vector <int> outDeg; // out-degree of each vertex (directed graph)
 
     vector <int> isolatedV; // isolated vertices
     vector <int> leafV; // leaf vertices
@@ -196,13 +196,104 @@ int numEdges (vector <vector<int>> list, int n) {
 }
 
 // 3. degree of each vertices for undirected graph. In-degree and out-degree for directed graph.
+void calDeg (Graph &g1) {
+    // đối với đồ thị vô hướng: số bậc của đỉnh = số đỉnh kề với nó
+    // khuyên được tính hai lần
+    if ( ! g1.isDirected) {
+        for (int i = 0; i < g1.n; i++) {
+            int deg = 0;
+            for (int j = 0; j < g1.n; j++) {
+                deg += g1.a[i][j];
+                if (j == i && g1.a[i][j] == 1) {    // khuyên được tính hai lần
+                    deg++;
+                }
+            }
+            g1.deg.push_back(deg);
+        }
+    } else {
+        // đối với đồ thị có hướng: số bậc vào của đỉnh = tổng cột của đỉnh đó
+        // số bậc ra của đỉnh = tổng dòng của đỉnh đó
+        // khuyên được tính 1 lần bậc vào và 1 lần bậc ra
+        for (int i = 0; i < g1.n; i++) {
+            int inDeg = 0;
+            int outDeg = 0;
+            for (int j = 0; j < g1.n; j++) {
+                inDeg += g1.a[j][i];
+                outDeg += g1.a[i][j];
+            }
+            g1.inDeg.push_back(inDeg);
+            g1.outDeg.push_back(outDeg);
+        }
 
+        // tính bậc tổng của đỉnh
+        for (int i = 0; i < g1.n; i++) {
+            g1.deg.push_back(g1.inDeg[i] + g1.outDeg[i]);
+        }
+    }
+}
 
 // 4. list of isolated vertices/ leaf vertices
+void listIsolated (Graph &g1) {
+    // Đỉnh cô lập: đỉnh có bậc bằng 0
+    for (int i = 0; i < g1.n; i++) {
+        if (g1.deg[i] == 0) {
+            g1.isolatedV.push_back(i);
+        }
+    }
+}
+
+void listLeaf (Graph &g1) {
+    // Đỉnh lá: đỉnh có bậc bằng 1
+    for (int i = 0; i < g1.n; i++) {
+        if (g1.deg[i] == 1) {
+            g1.leafV.push_back(i);
+        }
+    }
+}
 
 // 5. is the given graph special: complete graph, circular graph, bigraph, complete bi-graph
+/*
+    Complete graph: đồ thị đơn vô hướng có n đỉnh và n(n-1)/2 cạnh, giữa hai đỉnh bất kì đều có một cạnh nối
+    Circular graph: đồ thị chứa 1 chu trình duy nhất qua tất cả các đỉnh, mỗi đỉnh có bậc đúng bằng 2
+    Bigraph: đồ thị có thể chia thành 2 phần không có cạnh nối giữa các đỉnh trong cùng 1 phần
+    Complete bi-graph: đồ thị có thể chia thành 2 phần không có cạnh nối giữa các đỉnh trong cùng 1 phần, mỗi phần đều liên kết với các đỉnh trong phần còn lại
+*/
+bool isComplete (Graph g1) {
+    // if (g1.isDirected) {
+    //     return false;
+    // }
+    // for (int i = 0; i < g1.n; i++) {
+    //     for (int j = 0; j < g1.n; j++) {
+    //         if (i != j && g1.a[i][j] == 0) {
+    //             return false;
+    //         }
+    //     }
+    // }
+    // return true;
+}
+
+bool isCircular (Graph g1) {
+    // if (g1.isDirected) {
+    //     return false;
+    // }
+    // for (int i = 0; i < g1.n; i++) {
+    //     if (g1.deg[i] != 2) {
+    //         return false;
+    //     }
+    // }
+    // return true;
+}
+
+bool isBigraph(Graph g1) {
+
+}
+
+bool isCompleteBigraph(Graph g1) {
+
+}
 
 // 6. the number of connected components. how many of them are trees
+
 
 // 7. the number of cut vertices and bridge edges
 
@@ -263,6 +354,16 @@ int main() {
     g2.isDirected = isDirected(list, n2);
 
     // xác định bậc của đỉnh
+    calDeg(g1);
+    calDeg(g2);
+
+    // xác định đỉnh cô lập, đỉnh lá
+    listIsolated(g1);
+    listIsolated(g2);
+    listLeaf(g1);
+    listLeaf(g2);
+
+    // xác định có phải đồ thị đặc biệt hay không
 
 
     return 225;
