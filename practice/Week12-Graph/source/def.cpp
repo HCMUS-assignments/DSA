@@ -2,6 +2,59 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// struct directedGraph 
+struct Graph {
+    int n; // number of vertices
+    int **a; // adjacency matrix
+    vector <vector<int>> list; // adjacency list
+
+    int edges; // number of edges
+    bool isDirected; // true if graph is directed
+
+    int *deg; // degree of each vertex (undirected graph)
+    int *inDeg; // in-degree of each vertex (directed graph)
+    int *outDeg; // out-degree of each vertex (directed graph)
+
+    vector <int> isolatedV; // isolated vertices
+    vector <int> leafV; // leaf vertices
+
+    Graph();
+
+    Graph(int **&a, int n) {
+        this->n = n;
+        this->a = a;
+        // tạo danh sách kề
+        for (int i = 0; i < n; i++) {
+            vector <int> temp;
+            for (int j = 0; j < n; j++) {
+                if (a[i][j] != 0) {
+                    temp.push_back(j);
+                }
+            }
+            list.push_back(temp);
+        }
+    }
+    Graph(vector <vector<int>> &list, int n) {
+        this->n = n;
+        this->list = list;
+        // tạo ma trận kề
+        a = new int*[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = new int[n];
+            for (int j = 0; j < n; j++) {
+                a[i][j] = 0;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < list[i].size(); j++) {
+                int v = list[i][j];
+                a[i][v] = 1;
+            }
+        }
+    }
+};
+
 
 // Đọc ma trận kề từ file (done)
 void readAdjMatrix (string fileName, int **&a, int &n) {
@@ -104,10 +157,45 @@ bool isDirected (vector <vector<int>> list, int n) {
 }
 
 // 2. cal the number of edges and number of vertices
-int numEdges (int **a, int n);
-int numVertices (int **a, int n);
+int numEdges (int **a, int n) {
+    int count = 0;
+    if (isDirected(a, n)) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                count += a[i][j];
+            }
+        }
+    } else {
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                count += a[i][j];
+            }
+        }
+    }
+    return count;
+}
 
-// 3. degree of each vertices for undirected graph. In-degree and out-degree for directed graph
+int numEdges (vector <vector<int>> list, int n) {
+    int count = 0;
+    if (isDirected(list, n)) {
+        for (int i = 0; i < n; i++) {
+            count += list[i].size();
+        }
+    } else {
+        for (int i = 0; i < n; i++) {
+            count += list[i].size();
+            for (int j = 0; j < list[i].size(); j++) {
+                if (list[i][j] == i) {
+                    count++; // đỉnh i kề với chính nó, gấp đôi số cạnh để chia 2 phía sau
+                }
+            }
+        }
+        count /= 2;
+    }
+    return count;
+}
+
+// 3. degree of each vertices for undirected graph. In-degree and out-degree for directed graph.
 
 
 // 4. list of isolated vertices/ leaf vertices
@@ -161,6 +249,20 @@ int main() {
     int n2;
     readAdjList("adjList1.txt", list, n2);
     printAdjList(list, n2);
+
+    // chuyển sang dạng cấu trúc
+    Graph g1(a, n1);
+    Graph g2(list, n2);
+
+    // tính số cạnh
+    g1.edges = numEdges(a, n1);
+    g2.edges = numEdges(list, n2);
+
+    // kiểm tra đồ thị có hướng hay không
+    g1.isDirected = isDirected(a, n1);
+    g2.isDirected = isDirected(list, n2);
+
+    // xác định bậc của đỉnh
 
 
     return 225;
