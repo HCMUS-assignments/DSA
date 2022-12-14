@@ -413,7 +413,7 @@ bool isSpecialGraph (Graph g1) {
         cout << "Bigraph" << endl;
         return true;
     }
-    
+
     return false;
 }
 
@@ -504,6 +504,10 @@ int main() {
     listLeaf(g2);
 
     // xác định có phải đồ thị đặc biệt hay không
+    isSpecialGraph(g1);
+    isSpecialGraph(g2);
+
+    // xác định số thành phần liên thông
 
 
     return 225;
