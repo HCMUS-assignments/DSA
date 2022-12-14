@@ -8,7 +8,7 @@ struct Graph {
     int **a; // adjacency matrix
     vector <vector<int>> list; // adjacency list
 
-    int edges; // number of edges
+    int numEdges; // number of edges
     bool isDirected; // true if graph is directed
 
     vector <int> deg; // degree of each vertex (undirected graph)
@@ -49,7 +49,7 @@ struct Graph {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < list[i].size(); j++) {
                 int v = list[i][j];
-                a[i][v] = 1;
+                a[i][v] += 1;
             }
         }
     }
@@ -125,7 +125,7 @@ void printAdjMatrix (int **a, int n) {
 
 // I. Implement functions to provide information about a given graph
 
-// 1. check a graph is directed or undirected: kiểm tra liệu đồ thị có hướng hay vô hướng
+// 3.1. check a graph is directed or undirected: kiểm tra liệu đồ thị có hướng hay vô hướng
 bool isDirected (int **a, int n) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -156,7 +156,7 @@ bool isDirected (vector <vector<int>> list, int n) {
     return false;
 }
 
-// 2. cal the number of edges and number of vertices
+// 3.2. cal the number of edges and number of vertices
 int numEdges (int **a, int n) {
     int count = 0;
     if (isDirected(a, n)) {
@@ -195,7 +195,7 @@ int numEdges (vector <vector<int>> list, int n) {
     return count;
 }
 
-// 3. degree of each vertices for undirected graph. In-degree and out-degree for directed graph.
+// 3.3. degree of each vertices for undirected graph. In-degree and out-degree for directed graph.
 void calDeg (Graph &g1) {
     // đối với đồ thị vô hướng: số bậc của đỉnh = số đỉnh kề với nó
     // khuyên được tính hai lần
@@ -251,7 +251,7 @@ void listLeaf (Graph &g1) {
     }
 }
 
-// 5. is the given graph special: complete graph, circular graph, bigraph, complete bi-graph
+// 3.5. is the given graph special: complete graph, circular graph, bigraph, complete bi-graph
 /*
     Complete graph: đồ thị đơn vô hướng có n đỉnh và n(n-1)/2 cạnh, giữa hai đỉnh bất kì đều có một cạnh nối
     Circular graph: đồ thị chứa 1 chu trình duy nhất qua tất cả các đỉnh, mỗi đỉnh có bậc đúng bằng 2
@@ -265,7 +265,7 @@ bool isComplete (Graph g1) {
     if (g1.isolatedV.size() > 0) {
         return false;
     }
-    if (g1.edges != g1.n * (g1.n - 1) / 2) {
+    if (g1.numEdges != g1.n * (g1.n - 1) / 2) {
         return false;
     }
     for (int i = 0; i < g1.n; i++) {
@@ -417,7 +417,7 @@ bool isSpecialGraph (Graph g1) {
     return false;
 }
 
-// 6. the number of connected components. how many of them are trees
+// 3.6. the number of connected components. how many of them are trees
 /*
     Đồ thị liên thông: đồ thị có thể đi từ một đỉnh bất kì đến mọi đỉnh khác
     Cây: đồ thị liên thông không có chu trình
@@ -435,12 +435,53 @@ bool isSpecialGraph (Graph g1) {
 // }
 
 
-// 7. the number of cut vertices and bridge edges
+// 3.7. the number of cut vertices and bridge edges
 
 
 // -------------------------------------------------------
 
 // 4. generate a base undirected graph from a given directed graph
+void generateUndirectedGraph (Graph g1, Graph &g2) {
+    // thiết lập các giá trị cho đồ thị mới
+    g2.n = g1.n;
+    g2.numEdges = g1.numEdges;
+    g2.isDirected = false;
+    g2.isolatedV = g1.isolatedV;
+    g2.leafV = g1.leafV;
+
+    g2.list = g1.list;
+
+    // chuyển danh sách kề của đồ thị có hướng thành đồ thị vô hướng
+    for (int i = 0; i < g1.n; i++) {
+        for (int j = 0; j < g1.list[i].size(); j++) {
+            int x = g1.list[i][j];
+            // duyệt qua danh sách kề của x nếu không có i thì thêm vào
+            if (find(g2.list[x].begin(), g2.list[x].end(), i) == g2.list[x].end()) {
+                g2.list[x].push_back(i);
+            }
+        }
+    }
+
+    // khởi tạo ma trận kề cho đồ thị vô hướng
+    g2.a = new int*[g2.n];
+    for (int i = 0; i < g2.n; i++) {
+        g2.a[i] = new int[g2.n];
+        for (int j = 0; j < g2.n; j++) {
+            g2.a[i][j] = 0;
+        }
+    }
+
+    // chuyển danh sách kề thành ma trận kề
+    for (int i = 0; i < g2.n; i++) {
+        for (int j = 0; j < g2.list[i].size(); j++) {
+            int x = g2.list[i][j];
+            g2.a[i][x] += 1;
+        }
+    }
+
+    // tính số bậc cho  các đỉnh
+    calDeg(g2);
+}
 
 // 5. generate a complement graph from a given undirected graph, outputting the corresponding adjacency matrix
 
@@ -486,8 +527,8 @@ int main() {
     Graph g2(list, n2);
 
     // tính số cạnh
-    g1.edges = numEdges(a, n1);
-    g2.edges = numEdges(list, n2);
+    g1.numEdges = numEdges(a, n1);
+    g2.numEdges = numEdges(list, n2);
 
     // kiểm tra đồ thị có hướng hay không
     g1.isDirected = isDirected(a, n1);
