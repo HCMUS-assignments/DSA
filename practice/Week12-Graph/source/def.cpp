@@ -259,40 +259,180 @@ void listLeaf (Graph &g1) {
     Complete bi-graph: đồ thị có thể chia thành 2 phần không có cạnh nối giữa các đỉnh trong cùng 1 phần, mỗi phần đều liên kết với các đỉnh trong phần còn lại
 */
 bool isComplete (Graph g1) {
-    // if (g1.isDirected) {
-    //     return false;
-    // }
-    // for (int i = 0; i < g1.n; i++) {
-    //     for (int j = 0; j < g1.n; j++) {
-    //         if (i != j && g1.a[i][j] == 0) {
-    //             return false;
-    //         }
-    //     }
-    // }
-    // return true;
+    if (g1.isDirected) {
+        return false;
+    }
+    if (g1.isolatedV.size() > 0) {
+        return false;
+    }
+    if (g1.edges != g1.n * (g1.n - 1) / 2) {
+        return false;
+    }
+    for (int i = 0; i < g1.n; i++) {
+        for (int j = 0; j < g1.n; j++) {
+            if (i != j && g1.a[i][j] == 0) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 bool isCircular (Graph g1) {
-    // if (g1.isDirected) {
-    //     return false;
-    // }
-    // for (int i = 0; i < g1.n; i++) {
-    //     if (g1.deg[i] != 2) {
-    //         return false;
-    //     }
-    // }
-    // return true;
+    if (g1.isDirected) {
+        return false;
+    }
+    if (g1.isolatedV.size() > 0) {
+        return false;
+    }
+    for (int i = 0; i < g1.n; i++) {
+       if (g1.list.size() != 2) {
+           return false;
+       }
+    }
+    return true;
 }
 
 bool isBigraph(Graph g1) {
+    // nếu có đỉnh cô lập thi không phải đồ thị 2 phần
+    if (g1.isolatedV.size() > 0) {
+        return false;
+    }
+    // tạo mảng color để đánh dấu màu cho các đỉnh
+    int color[g1.n] = {0};
+    // tạo queue các đỉnh đã tô màu để duyệt
+    queue<int> q;
+    // tạo vector visited để đánh dấu các đỉnh đã duyệt
+    vector <int> visited;
+    // sử dụng hai màu 1 và 2 để tô màu cho các đỉnh
 
+    // tô màu cho đỉnh đầu tiên là 1
+    color[0] = 1;
+    // đưa đỉnh đầu tiên vào queue
+    q.push(0);
+
+    while (visited.size() < g1.n) {
+        // lấy đỉnh đầu tiên trong queue
+        int u = q.front();
+        // xóa đỉnh đầu tiên trong queue
+        q.pop();
+        // duyệt các đỉnh kề với đỉnh u
+        for (int x : g1.list[u]) {
+            // nếu đỉnh x chưa được tô màu
+            if (color[x] == 0) {
+                // tô màu cho đỉnh x là màu khác với màu của đỉnh u
+                color[x] = 3 - color[u];
+                // đưa đỉnh x vào queue
+                q.push(x);
+            }
+            // nếu đỉnh x đã được tô màu
+            else {
+                // nếu đỉnh x có cùng màu với đỉnh u
+                if (color[x] == color[u]) {
+                    return false;
+                }
+            }
+        }
+        // đánh dấu đỉnh u đã được duyệt
+        visited.push_back(u);
+    }
+    return true;
 }
 
 bool isCompleteBigraph(Graph g1) {
+    if (! isBigraph(g1)) {
+        return false;
+    }
 
+    // tạo mảng color để đánh dấu màu cho các đỉnh
+    int color[g1.n] = {0};
+    // tạo queue các đỉnh đã tô màu để duyệt
+    queue<int> q;
+    // tạo vector visited để đánh dấu các đỉnh đã duyệt
+    vector <int> visited;
+    // sử dụng hai màu 1 và 2 để tô màu cho các đỉnh
+
+    // tô màu cho đỉnh đầu tiên là 1
+    color[0] = 1;
+    // đưa đỉnh đầu tiên vào queue
+    q.push(0);
+
+    while (visited.size() < g1.n) {
+        // lấy đỉnh đầu tiên trong queue
+        int u = q.front();
+        // xóa đỉnh đầu tiên trong queue
+        q.pop();
+        // duyệt các đỉnh kề với đỉnh u
+        for (int x : g1.list[u]) {
+            // nếu đỉnh x chưa được tô màu
+            if (color[x] == 0) {
+                // tô màu cho đỉnh x là màu khác với màu của đỉnh u
+                color[x] = 3 - color[u];
+                // đưa đỉnh x vào queue
+                q.push(x);
+            }
+        }
+        // đánh dấu đỉnh u đã được duyệt
+        visited.push_back(u);
+    }
+
+    // lấy các đỉnh cùng màu 1 vào vector v1
+    vector <int> v1;
+    for (int i = 0; i < g1.n; i++) {
+        if (color[i] == 1) {
+            v1.push_back(i);
+        }
+    }
+
+    int nV2 = g1.n - v1.size();
+
+    // duyệt qua các đỉnh trong v1, nếu có số  đỉnh kề khác nv2 thì đồ thị không phải là complete bigraph
+    for (int x : v1) {
+        if (g1.list[x].size() != nV2) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool isSpecialGraph (Graph g1) {
+    if (isComplete(g1)) {
+        cout << "Complete graph" << endl;
+        return true;
+    }
+    if (isCircular(g1)) {
+        cout << "Circular graph" << endl;
+        return true;
+    }
+    if (isBigraph(g1)) {
+        if (isCompleteBigraph(g1)) {
+            cout << "Complete bigraph" << endl;
+            return true;
+        }
+        cout << "Bigraph" << endl;
+        return true;
+    }
+    
+    return false;
 }
 
 // 6. the number of connected components. how many of them are trees
+/*
+    Đồ thị liên thông: đồ thị có thể đi từ một đỉnh bất kì đến mọi đỉnh khác
+    Cây: đồ thị liên thông không có chu trình
+*/
+// void connectedComponents (Graph g1) {
+//     int count = 0;
+//     for (int i = 0; i < g1.n; i++) {
+//         if (g1.visited[i] == false) {
+//             count++;
+//             DFS(g1, i);
+//         }
+//     }
+//     cout << "Number of connected components: " << count << endl;
+//     cout << "Number of trees: " << count - g1.cycles << endl;
+// }
 
 
 // 7. the number of cut vertices and bridge edges
