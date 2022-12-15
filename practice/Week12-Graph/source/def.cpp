@@ -2,7 +2,18 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// struct directedGraph 
+// struct Edge
+struct Edge {
+    int u, v, w;
+    Edge() {}
+    Edge(int u, int v, int w) {
+        this->u = u;   // đỉnh đầu 
+        this->v = v;    // đỉnh cuối
+        this->w = w;    // trọng số
+    }
+};
+
+// struct Graph 
 struct Graph {
     int n; // number of vertices
     int **a; // adjacency matrix
@@ -491,12 +502,30 @@ void generateUndirectedGraph (Graph g1, Graph &g2) {
 
 // 8.1. find the spanning tree of a given graph using DFS traversal
 
+void DFS (Graph g, int u, int *&visited) {
+    cout << u << " - ";
+    visited[u] = 1;
+    for (int i = 0; i < g.list[u].size(); i++) {
+        int x = g.list[u][i];
+        if (visited[x] == 0) {
+            DFS(g, x, visited);
+        }
+    }
+
+
+}
+
 // 8.2. find the spanning tree of a given graph using BFS traversal
+void BFS (Graph g, int u, int *&visited) {
+
+}
 
 
 // 9.1. find the minimum spanning tree of a given graph using Prim algorithm
 
 // 9.2. find the minimum spanning tree of a given graph using Kruskal algorithm
+
+
 
 // 10. verify the connection between 2 vertices of a given graph
 
@@ -530,13 +559,36 @@ int main() {
     g1.numEdges = numEdges(a, n1);
     g2.numEdges = numEdges(list, n2);
 
+    cout << "Number of edges G1: " << g1.numEdges << endl;
+    cout << "Number of edges G2: " << g2.numEdges << endl;
+
     // kiểm tra đồ thị có hướng hay không
     g1.isDirected = isDirected(a, n1);
     g2.isDirected = isDirected(list, n2);
 
+    cout << "G1 is directed: " << g1.isDirected << endl;
+    cout << "G2 is directed: " << g2.isDirected << endl;
+
     // xác định bậc của đỉnh
     calDeg(g1);
     calDeg(g2);
+
+    cout << "Bac cua cac dinh cua G1: " << endl;
+    for (int i = 0; i < g1.n; i++) {
+        // nếu là đồ thị có hướng thì bậc vào và bậc ra
+        if (g1.isDirected) {
+            cout << "deg(" << i << ") = (- +) : (" << g1.inDeg[i] << ", " << g1.outDeg[i] << ")" << endl;
+        }
+        cout << "deg(" << i << ") = " << g1.deg[i] << endl;
+    }
+    cout << "Bac cua cac dinh cua G2: " << endl;
+    for (int i = 0; i < g2.n; i++) {
+        // nếu là đồ thị có hướng thì bậc vào và bậc ra
+        if (g2.isDirected) {
+            cout << "deg(" << i << ") = (- +) : (" << g2.inDeg[i] << ", " << g2.outDeg[i] << ")" << endl;
+        }
+        cout << "deg(" << i << ") = " << g2.deg[i] << endl;
+    }
 
     // xác định đỉnh cô lập, đỉnh lá
     listIsolated(g1);
@@ -544,9 +596,61 @@ int main() {
     listLeaf(g1);
     listLeaf(g2);
 
+    cout << "Danh sach dinh co lap G1: " << endl;
+    for (int i = 0; i < g1.isolatedV.size(); i++) {
+        cout << g1.isolatedV[i] << " ";
+    }
+    cout << endl;
+    cout << "Danh sach dinh co lap G2: " << endl;
+    for (int i = 0; i < g2.isolatedV.size(); i++) {
+        cout << g2.isolatedV[i] << " ";
+    }
+    cout << endl;
+    cout << "Danh sach dinh la G1: " << endl;
+    for (int i = 0; i < g1.leafV.size(); i++) {
+        cout << g1.leafV[i] << " ";
+    }
+    cout << endl;
+    cout << "Danh sach dinh la G2: " << endl;
+    for (int i = 0; i < g2.leafV.size(); i++) {
+        cout << g2.leafV[i] << " ";
+    }
+    cout << endl;
+
     // xác định có phải đồ thị đặc biệt hay không
-    isSpecialGraph(g1);
-    isSpecialGraph(g2);
+    cout << "G1 is special graph: " << isSpecialGraph(g1) << endl;
+    cout << "G2 is special graph: " << isSpecialGraph(g2) << endl;
+
+    // duyệt đồ thị theo chiều sâu
+    int *visited = new int[g1.n];
+    for (int i = 0; i < g1.n; i++) {
+        visited[i] = 0;
+    }
+    DFS(g1, 0, visited);
+    cout << endl;
+
+    visited = new int[g2.n];
+    for (int i = 0; i < g2.n; i++) {
+        visited[i] = 0;
+    }
+    DFS(g2, 0, visited);
+    cout << endl;
+
+    // duyệt đồ thị theo chiều rộng
+    visited = new int[g1.n];
+    for (int i = 0; i < g1.n; i++) {
+        visited[i] = 0;
+    }
+
+    BFS(g1, 0, visited);
+    cout << endl;
+
+    visited = new int[g2.n];
+    for (int i = 0; i < g2.n; i++) {
+        visited[i] = 0;
+    }
+    BFS(g2, 0, visited);
+    cout << endl;
 
     // xác định số thành phần liên thông
 
