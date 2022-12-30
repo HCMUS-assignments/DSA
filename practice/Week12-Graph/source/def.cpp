@@ -433,17 +433,17 @@ bool isSpecialGraph (Graph g1) {
     Đồ thị liên thông: đồ thị có thể đi từ một đỉnh bất kì đến mọi đỉnh khác
     Cây: đồ thị liên thông không có chu trình
 */
-// void connectedComponents (Graph g1) {
-//     int count = 0;
-//     for (int i = 0; i < g1.n; i++) {
-//         if (g1.visited[i] == false) {
-//             count++;
-//             DFS(g1, i);
-//         }
-//     }
-//     cout << "Number of connected components: " << count << endl;
-//     cout << "Number of trees: " << count - g1.cycles << endl;
-// }
+void connectedComponents (Graph g1, int *&visited) {
+    int count = 0;
+    for (int i = 0; i < g1.n; i++) {
+        if (visited[i] == false) {
+            count++;
+            DFS(g1, i, visited);
+        }
+    }
+    cout << "Number of connected components: " << count << endl;
+    // cout << "Number of trees: " << count - g1.cycles << endl;   
+}
 
 
 // 3.7. the number of cut vertices and bridge edges
@@ -503,27 +503,40 @@ void generateUndirectedGraph (Graph g1, Graph &g2) {
 // 8.1. find the spanning tree of a given graph using DFS traversal
 
 void DFS (Graph g, int u, int *&visited) {
-    cout << u << " - ";
+    cout << u << "  ";
     visited[u] = 1;
-    for (int i = 0; i < g.list[u].size(); i++) {
-        int x = g.list[u][i];
+    for (int x : g.list[u]) {
         if (visited[x] == 0) {
             DFS(g, x, visited);
         }
     }
-
-
 }
 
 // 8.2. find the spanning tree of a given graph using BFS traversal
 void BFS (Graph g, int u, int *&visited) {
+    queue<int> q;
+    q.push(u);
+    visited[u] = 1;
+    while (!q.empty()) {
+        int x = q.front();
+        q.pop();
+        cout << x << "  ";
+        for (int y : g.list[x]) {
+            if (visited[y] == 0) {
+                q.push(y);
+                visited[y] = 1;
+            }
+        }
+    }
 
 }
 
 
 // 9.1. find the minimum spanning tree of a given graph using Prim algorithm
 
+
 // 9.2. find the minimum spanning tree of a given graph using Kruskal algorithm
+
 
 
 
